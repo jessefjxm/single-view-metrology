@@ -60,7 +60,7 @@ coords = [coords; str2num(pos{:})];
 pos = inputdlg('Enter Real World Coordinate for 4th point(x,y) - example 50,1');
 coords = [coords; str2num(pos{:})];
 
-fprintf("Coords Entered (x,y)\n");
+fprintf('Coords Entered (x,y)\n');
 disp(coords);
 
 % ################################################################
@@ -68,6 +68,8 @@ disp(coords);
 % ################################################################
 
 H = getTransitionMatrix(x,y,coords);
+fprintf('Transition Matrix\n');
+disp(H);
 
 % ###############################################################
 % GET REFERENCE POINTS
