@@ -21,103 +21,78 @@ while size(x) ~= 8
     hold on;
     [x,y] = getpts(canvas.figure);
 end
-
-fprintf(" Adding selected points to a single array\n\n");
+delete(h);
+% Display Selected Points
+scatter(x,y,'blue','fill');
+% Add points to an array to calculate vanishing points
 points = [];
 for i=1:8
     points = [points;[x(i),y(i),1]];
 end
-
 % Calculate Vanishing Points
 fprintf("Calculating Vanishing Points\n");
 vanishing_points = getVanishingPoints(points);
-s = size(vanishing_points);
-fprintf("Size of Vanishing Point Structure after call calculations- %dx%d\n",s(1),s(2));
+disp(vanishing_points);
 
-% ####################
-% Get Origin
-% ####################
-h = msgbox('Select Origin Point - double click the point on the image');
-[x,y] = getpts(canvas.figure);
-while(size(x) ~= 1)
-    h = msgbox('You MUST select ONE origin point point - double click the point on the image');
-    [x,y] = getpts(canvas.figure);
-end
-fprintf('Origin = %dx%d\n',x,y);
 
-% ##############################
-% Select Points for Plane 1
-% ##############################
-h = msgbox('Select Plane 1 points - This should be 4 points - double click on the 4th');
+
+
+% #################################################
+% Select 4 points that correspond to the same plane
+% #################################################
+h = msgbox('Select 4 Points that are on the same plane');
 [x,y] = getpts(canvas.figure);
 while size(x) ~= 4
-    h = msgbox('Select Plane 1 points - This should be 4 points - double click on the 4th');
+    h = msgbox('Select 4 Points that are on the same plane');
     [x,y] = getpts(canvas.figure);
 end
-% Force user to enter actual dimension for coordinates just selected
-coords_plane1 = [];
-coords_plane1 = [coords_plane1; inputdlg('Enter position for x1 - example 0')];
-coords_plane1 = [coords_plane1; inputdlg('Enter position for y1 - example 0')];
-coords_plane1 = [coords_plane1; inputdlg('Enter position for x2 - example 50')];
-coords_plane1 = [coords_plane1; inputdlg('Enter position for y2 - example 50')];
-fprintf("Coords Entered for Plane 1\n");
-disp(coords_plane1);
+delete(h);
+scatter(x,y,'red','fill');
 
-% COMPUTE TRANSITION MATRIX
+% Force user to enter real world coordinates
+coords = [];
+pos= inputdlg('Enter Real World Coordinate for 1st point(x,y) - example 1,1 ');
+coords = [coords; str2num(pos{:})];
+pos = inputdlg('Enter Real World Coordinate for 2nd point(x,y) - example 1,50');
+coords = [coords; str2num(pos{:})];
+pos = inputdlg('Enter Real World Coordinate for 3rd point(x,y) - example 50,50');
+coords = [coords; str2num(pos{:})];
+pos = inputdlg('Enter Real World Coordinate for 4th point(x,y) - example 50,1');
+coords = [coords; str2num(pos{:})];
 
-% SELECT TEXTURE PLANE
+fprintf("Coords Entered (x,y)\n");
+disp(coords);
 
+% ################################################################
+% COMPUTE TRANSITION MATRIX FROM COORDS and X,Y Values on Plane
+% ################################################################
 
+H = getTransitionMatrix(x,y,coords);
 
-% #############################
-% Select Points for Plane 2
-% #############################
-h = msgbox('Select Plane 2 points - This should be 4 points - double click on the 4th');
-[x,y] = getpts(canvas.figure);
-while size(x) ~= 4
-    h = msgbox('Select Plane 2 points - This should be 4 points - double click on the 4th');
-    [x,y] = getpts(canvas.figure);
+% ###############################################################
+% GET REFERENCE POINTS
+% ###############################################################
+
+h = msgbox('Select 1 reference point');
+[x_r1,y_r1] = getpts(canvas.figure);
+while size(x_r1) ~= 1
+    h = msgbox('Select 1 reference point');
+    [x_r1,y_r1] = getpts(canvas.figure);
 end
+delete(h);
+scatter(x_r1,y_r1,'green','fill');
 
-% Force user to enter actual dimension for coordinates just selected
-coords_plane2 = [];
-coords_plane2 = [coords_plane2; inputdlg('Enter position for x1 - example 0')];
-coords_plane2 = [coords_plane2; inputdlg('Enter position for y1 - example 0')];
-coords_plane2 = [coords_plane2; inputdlg('Enter position for x2 - example 50')];
-coords_plane2 = [coords_plane2; inputdlg('Enter position for y2 - example 50')];
-fprintf("Coords Entered for Plane 2\n");
-disp(coords_plane2);
-
-% COMPUTE TRANSITION MATRIX
-
-% SELECT TEXTURE PLANE
-
-
-% ###############################
-% Select Points for Plane 3
-% ###############################
-h = msgbox('Select Plane 3 points - This should be 4 points - double click on the 4th');
-[x,y] = getpts(canvas.figure);
-while size(x) ~= 4
-    h = msgbox('Select Plane 3 points - This should be 4 points - double click on the 4th');
-    [x,y] = getpts(canvas.figure);
+h = msgbox('Select a 2nd reference point and then input the height');
+[x_r2,y_r2] = getpts(canvas.figure);
+while size(x_r2) ~= 1
+    h = msgbox('Select a 2nd reference point and then input the height');
+    [x_r2,y_r2] = getpts(canvas.figure);
 end
-
-% Force user to enter actual dimension for coordinates just selected
-coords_plane3 = [];
-coords_plane3 = [coords_plane3; inputdlg('Enter position for x1 - example 0')];
-coords_plane3 = [coords_plane3; inputdlg('Enter position for y1 - example 0')];
-coords_plane3 = [coords_plane3; inputdlg('Enter position for x2 - example 50')];
-coords_plane3 = [coords_plane3; inputdlg('Enter position for y2 - example 50')];
-fprintf("Coords Entered for Plane 3\n");
-disp(coords_plane3);
-
-% COMPUTE TRANSITION MATRIX
-
-% SELECT TEXTURE PLANE
+delete(h);
+scatter(x_r2,y_r2,'green','fill');
 
 % ################################
-% Compute Texture MAps
+% GET Texture Maps
 % ################################
 
 
