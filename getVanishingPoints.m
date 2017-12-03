@@ -11,7 +11,7 @@ function vanishPt = getVanishingPoints(pt)
     [~, ~, v] = svd(m);
     vanishPt = v(:, 3)'/v(3,3);
     
-    fprintf("1st Vanishing Point\n");
+    fprintf('1st Vanishing Point\n');
     disp(vanishPt(1,:));
     
     l1 = cross(pt(1,:), pt(4, :));
@@ -26,7 +26,7 @@ function vanishPt = getVanishingPoints(pt)
     [~, ~, v] = svd(m);
     vanishPt = [vanishPt; v(:, 3)'/v(3,3)];
     
-    fprintf("2nd Vanishing Point\n");
+    fprintf('2nd Vanishing Point\n');
     disp(vanishPt(2,:));
     
     l1 = cross(pt(1,:), pt(2, :));
@@ -40,6 +40,6 @@ function vanishPt = getVanishingPoints(pt)
     m = m1 + m2 + m3 + m4;
     [~, ~, v] = svd(m);
     vanishPt = [vanishPt; v(:, 3)'/v(3,3)];
-    fprintf("3rd Vanishing Point\n");
+    fprintf('3rd Vanishing Point\n');
     disp(vanishPt(3,:));
 end

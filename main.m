@@ -32,7 +32,7 @@ for i=1:8
     points = [points;[x(i),y(i),1]];
 end
 % Calculate Vanishing Points
-fprintf("Calculating Vanishing Points\n");
+fprintf('Calculating Vanishing Points\n');
 vanishing_points = getVanishingPoints(points);
 disp(vanishing_points);
 
