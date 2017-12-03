@@ -4,7 +4,7 @@ clc;
 % Prompt user to select file to perform single view metrology on
 filename = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
           '*.*','All Files' },'Select File to perform Single View Metrology on...');
-
+im = imread(filename);
 % Force image to display in canvas and stay open
 canvas.figure = figure;
 imshow(filename);
@@ -20,8 +20,10 @@ while size(x) ~= 8
     h = msgbox('You MUST select 8 points - on the last point double click');
     hold on;
     [x,y] = getpts(canvas.figure);
+    delete(h);
 end
 delete(h);
+
 % Display Selected Points
 scatter(x,y,'blue','fill');
 % Add points to an array to calculate vanishing points
@@ -40,11 +42,12 @@ disp(vanishing_points);
 % #################################################
 % Select 4 points that correspond to the same plane
 % #################################################
-h = msgbox('Select 4 Points that are on the same plane');
+h = msgbox('Select 4 Points that are on the same plane - Press Enter when done');
 [x,y] = getpts(canvas.figure);
 while size(x) ~= 4
-    h = msgbox('Select 4 Points that are on the same plane');
+    h = msgbox('Select 4 Points that are on the same plane - Press Enter when done');
     [x,y] = getpts(canvas.figure);
+    delete(h);
 end
 delete(h);
 scatter(x,y,'red','fill');
@@ -75,26 +78,44 @@ disp(H);
 % GET REFERENCE POINTS
 % ###############################################################
 
-h = msgbox('Select 1 reference point');
+h = msgbox('Select 1 reference point - Press Enter when done');
 [x_r1,y_r1] = getpts(canvas.figure);
 while size(x_r1) ~= 1
-    h = msgbox('Select 1 reference point');
+    h = msgbox('Select 1 reference point - Press Enter when done');
     [x_r1,y_r1] = getpts(canvas.figure);
+    delete(h);
 end
 delete(h);
 scatter(x_r1,y_r1,'green','fill');
 
-h = msgbox('Select a 2nd reference point and then input the height');
+h = msgbox('Select a 2nd reference point and then input the height - Press Enter when done');
 [x_r2,y_r2] = getpts(canvas.figure);
+
 while size(x_r2) ~= 1
-    h = msgbox('Select a 2nd reference point and then input the height');
+    h = msgbox('Select a 2nd reference point and then input the height between them - Press Enter when done');
     [x_r2,y_r2] = getpts(canvas.figure);
+    delete(h);
 end
 delete(h);
 scatter(x_r2,y_r2,'green','fill');
 
-% ################################
-% GET Texture Maps
-% ################################
+height = inputdlg('Enter Height between reference points');
+height = str2num(height{:});
+
+[ref_points.xy,ref_points.uv] = getRefPoints(x_r1,y_r1,x_r2,y_r2,height,H);
+
+fprintf('ref_points xy\n');
+disp(ref_points.xy);
+fprintf('ref_points uv\n');
+disp(ref_points.uv);
+
+% ####################################################
+% Get 3-D Points
+% ####################################################
+
+
+% ####################################################
+% Get Texture Maps
+% ####################################################
 
 

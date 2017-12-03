@@ -15,7 +15,9 @@ if ~exist('handles.imgName', 'var')
 else
     saveTexture(I2, pos, handles.imgName);
 end
+
 end
+
 
 function cutTexture_Callback(hObject, eventdata, handles)
 handles = guidata(hObject);
@@ -36,4 +38,6 @@ else
     end
     getTextureMaps(invH, im);
     guidata(hObject, handles);
+end
+
 end
