@@ -46,16 +46,18 @@ end
 
 % --- Executes on button press in loadImage.
 function loadImage_Callback(hObject, eventdata, handles)
+global filename;
 % get file
-filename = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
+filepath = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
     '*.*','All Files' },'Select File to perform Single View Metrology on...');
+[~,filename,~] = fileparts(filepath);
 % update image
 axes(handles.image)
-handles.im = image(imread(filename));
+handles.im = image(imread(filepath));
 axis image;
 hold all;
 %handles.im.ButtonDownFcn = @image_ButtonDownFcn;
-set(handles.im,'buttondownfcn',@image_ButtonDownFcn);
+set(handles.im,'buttondownfcn',{@image_ButtonDownFcn,handles});
 guidata(hObject, handles);
 % init variables
 global vpoints;
@@ -75,7 +77,7 @@ textUpdate(1);
 end
 
 % --- Executes on button press in showModel.
-function image_ButtonDownFcn(hObject, eventdata)
+function image_ButtonDownFcn(hObject, eventdata, handles)
 global vpoints;
 global plots;
 global lines;
@@ -110,11 +112,14 @@ if(size(vpoints,1) <= 8)
     end
 elseif (size(vpoints,1) <= 8+1)
     % #################################################
-    % Select oringinal planes
+    % Select oringin point
     % #################################################
     plots = [plots;plot(x1,y1,'.','color','red','LineWidth',2)];
     textUpdate(4);
 elseif (size(vpoints,1) <= 8+1+3)
+    % #################################################
+    % Set reference point and length
+    % #################################################
     plots = [plots;plot(x1,y1,'*','color','yellow')];
     textUpdate(4);
     % draw line
@@ -124,6 +129,14 @@ elseif (size(vpoints,1) <= 8+1+3)
     len = inputdlg('Enter length of this reference line - example 50',...
         'Set Reference Length',1,{'50'});
     reflength = [reflength str2num(len{:})];
+    if(size(vpoints,1) == 8+1+3)
+        % #################################################
+        % Calculation projection & Homography matrix
+        % #################################################
+        set(handles.xyplane,'Enable','on') ;
+        set(handles.xzplane,'Enable','on') ;
+        set(handles.yzplane,'Enable','on') ;
+    end
 end
 end
 
@@ -182,7 +195,7 @@ end
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
 end
-    
+
 % --- Executes on button press in showModel.
 function showModel_Callback(hObject, eventdata, handles)
 end
