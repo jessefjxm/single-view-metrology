@@ -95,9 +95,9 @@ if(size(vpoints,1) <= 8)
     % draw lines
     vsize = size(vpoints,1);
     if(mod(vsize,2)==0)
-        lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'LineWidth',2,'color','b')] ;
+        lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'--','LineWidth',1.5,'color','b')] ;
     end
-    if (size(vpoints,1) == 8)        
+    if (size(vpoints,1) == 8)
         textUpdate(2);
         % Calculate Vanishing Points
         delete(plots(:));
@@ -106,60 +106,23 @@ if(size(vpoints,1) <= 8)
         pause(1);
         textUpdate(3);
     end
-elseif (size(vpoints,1) <= 8+4)
+elseif (size(vpoints,1) <= 8+1)
     % #################################################
-    % Select 4 points that correspond to the same plane
+    % Select oringinal planes
     % #################################################
     plots = [plots;plot(x1,y1,'.','color','red','LineWidth',2)];
-    textUpdate(3);
-    if(size(vpoints,1) == 8+4)
-        textUpdate(4);
-        % Force user to enter real world coordinates
-        coords = [];
-        pos= inputdlg('Enter Real World Coordinate for 1st point(x,y) - example 1,1 ',...
-            'Set Real Coordinates [1/4]',1,{'1,1'});
-        coords = [coords; str2num(pos{:})];
-        pos = inputdlg('Enter Real World Coordinate for 2nd point(x,y) - example 1,50',...
-            'Set Real Coordinates [2/4]',1,{'1,50'});
-        coords = [coords; str2num(pos{:})];
-        pos = inputdlg('Enter Real World Coordinate for 3rd point(x,y) - example 50,50',...
-            'Set Real Coordinates [3/4]',1,{'50,50'});
-        coords = [coords; str2num(pos{:})];
-        pos = inputdlg('Enter Real World Coordinate for 4th point(x,y) - example 50,1',...
-            'Set Real Coordinates [4/4]',1,{'50,1'});
-        coords = [coords; str2num(pos{:})];
-        % ################################################################
-        % COMPUTE TRANSITION MATRIX FROM COORDS and X,Y Values on Plane
-        % ################################################################
-        H = getTransitionMatrix(vpoints(9:12,1),vpoints(9:12,2),coords);
-        fprintf('Transition Matrix\n');
-        disp(H);
-        textUpdate(5);
-    end
-elseif (size(vpoints,1) <= 8+4+2)
+    textUpdate(4);
+elseif (size(vpoints,1) <= 8+1+3)
     plots = [plots;plot(x1,y1,'*','color','yellow')];
-    textUpdate(5);
-    if(size(vpoints,1) == 8+4+2)
-        % draw line
-        vsize = size(vpoints,1);
-        lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'LineWidth',2,'color','yellow')] ;
-        % get height
-        height = inputdlg('Enter Height between reference points - example 50',...
-            'Set Reference Height',1,{'50'});
-        height = str2num(height{:});
-        [ref_points.xy,ref_points.uv] = getRefPoints(...
-            vpoints(13,1),vpoints(13,2),vpoints(14,1),vpoints(14,2),height,H);
-        fprintf('ref_points xy\n');
-        disp(ref_points.xy);
-        fprintf('ref_points uv\n');
-        disp(ref_points.uv);
-    end
+    textUpdate(4);
+    % draw line
+    vsize = size(vpoints,1);
+    lines = [lines;plot([vpoints(9,1) vpoints(vsize,1)],[vpoints(9,2) vpoints(vsize,2)],'LineWidth',2,'color','yellow')] ;
+    % get length
+    length = inputdlg('Enter length of this reference line - example 50',...
+        'Set Reference Length',1,{'50'});
+    length = str2num(length{:});
 end
-end
-
-% --- Executes on button press in showModel.
-function showModel_Callback(hObject, eventdata, handles)
-
 end
 
 % -- state machine of text update
@@ -184,24 +147,19 @@ switch status
         set(gh.hint, 'String', sprintf('%s',...
             'Calculating...Please wait.'));
     case 3
-        set(gh.status, 'String', sprintf('%s%d%s','2. Pick Plane Points [',size(vpoints,1)-8,'/4]'));
+        set(gh.status, 'String', sprintf('%s%d%s','2. Pick Oringin Point [',size(vpoints,1)-8,'/1]'));
         set(gh.status, 'ForegroundColor', [0 0.25 0.5]);
         set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s\n\n%s',...
-            'Now we need to select 4 points that are on same plane.',...
+            'Now we need to select 1 oringin point at real coordinate.',...
             'Click on the image to set one point.',...
-            'Note : it''s better to pick corner points of one plane.'));
+            'Note : we suggest pick one corner point as the oringin of axis.'));
     case 4
-        set(gh.status, 'String', sprintf('%s%d%s','2. Pick Plane Points [',size(vpoints,1)-8,'/4]'));
-        set(gh.status, 'ForegroundColor', [0.25 0.25 0.5]);
-        set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s',...
-            'Points on same plane picked.',...
-            'Now we need to set their real coordinate (only consider [x,y]).'));
-    case 5
-        set(gh.status, 'String', sprintf('%s%d%s','3. Set Reference Points [',size(vpoints,1)-8-4,'/2]'));
+        set(gh.status, 'String', sprintf('%s%d%s','3. Set Reference Points [',size(vpoints,1)-8-1,'/3]'));
         set(gh.status, 'ForegroundColor', [0.5 0.25 0.5]);
         set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s',...
-            'Now we need to set reference points to get height info of the scenario.',...
-            'Select 2 reference points, then input the height between them.'));
+            'Now we need to set reference points to get real length info of the scenario.',...
+            'Select 3 reference points for each axis (x,y,z), then input the length of each line.',...
+            'Axis order: X->Y->Z.'));
     otherwise
         set(gh.status, 'String', 'Waiting for an Image');
         set(gh.status, 'ForegroundColor', [1 0 0]);
@@ -209,4 +167,18 @@ switch status
             'Every things start with loading a image.',...
             'Please press the ''Load Image'' button.'));
 end
+end
+
+% --- Executes on button press in xyplane.
+function xyplane_Callback(hObject, eventdata, handles)
+
+% --- Executes on button press in xzplane.
+function xzplane_Callback(hObject, eventdata, handles)
+
+% --- Executes on button press in yzplane.
+function yzplane_Callback(hObject, eventdata, handles)
+    
+% --- Executes on button press in showModel.
+function showModel_Callback(hObject, eventdata, handles)
+
 end
