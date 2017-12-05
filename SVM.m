@@ -61,11 +61,13 @@ guidata(hObject, handles);
 global vpoints;
 global plots;
 global lines;
+global reflength;
 delete(plots(:));
 delete(lines(:));
 vpoints = [];
 plots = [];
 lines = [];
+reflength = [];
 % update text
 textUpdate(0);
 pause(1);
@@ -77,7 +79,7 @@ function image_ButtonDownFcn(hObject, eventdata)
 global vpoints;
 global plots;
 global lines;
-global H;
+global reflength;
 % draw point
 if(size(vpoints,1) <= 8+4+2)
     % pick points
@@ -119,9 +121,9 @@ elseif (size(vpoints,1) <= 8+1+3)
     vsize = size(vpoints,1);
     lines = [lines;plot([vpoints(9,1) vpoints(vsize,1)],[vpoints(9,2) vpoints(vsize,2)],'LineWidth',2,'color','yellow')] ;
     % get length
-    length = inputdlg('Enter length of this reference line - example 50',...
+    len = inputdlg('Enter length of this reference line - example 50',...
         'Set Reference Length',1,{'50'});
-    length = str2num(length{:});
+    reflength = [reflength str2num(len{:})];
 end
 end
 
@@ -171,14 +173,16 @@ end
 
 % --- Executes on button press in xyplane.
 function xyplane_Callback(hObject, eventdata, handles)
+end
 
 % --- Executes on button press in xzplane.
 function xzplane_Callback(hObject, eventdata, handles)
+end
 
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
+end
     
 % --- Executes on button press in showModel.
 function showModel_Callback(hObject, eventdata, handles)
-
 end
