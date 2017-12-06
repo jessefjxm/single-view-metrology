@@ -1,4 +1,5 @@
 function varargout = SVM(varargin)
+clc;
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -46,6 +47,8 @@ end
 
 % --- Executes on button press in loadImage.
 function loadImage_Callback(hObject, eventdata, handles)
+
+
 % get file
 filename = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
     '*.*','All Files' },'Select File to perform Single View Metrology on...');
@@ -111,11 +114,12 @@ if(size(vpoints,1) <= 8)
     end
 elseif (size(vpoints,1) <= 8+1)
     % #################################################
-    % Select oringinal planes
+    % Select Origin planes
     % #################################################
     plots = [plots;plot(x1,y1,'.','color','red','LineWidth',2)];
     textUpdate(4);
 elseif (size(vpoints,1) <= 8+1+3)
+    
     plots = [plots;plot(x1,y1,'*','color','yellow')];
     textUpdate(4);
     % draw line
@@ -130,17 +134,20 @@ elseif (size(vpoints,1) <= 8+1+3)
     if(size(vpoints,1) == 8 + 1 + 3)
         
         % Pull out origin from vpoints structure
-        origin = vpoints(9);
+        origin = [];
+        origin = [origin; [vpoints(9,1) vpoints(9,2) 1]];
 
         % Pull out reference points from vpoints structure
         ref_points = [];
         for i=10:12
-            ref_points = [ref_points; [vpoints(i,1) vpoints(i,2)]];
+            % Build x y z matrix
+            ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
 
         end  
 
         % Create Projection Matrix
         projection_matrix = getProjectionMatrix(origin,ref_points,reflength,vanishing_points); 
+        [HomX,HomY,HomZ] = getHomographyMatrices(projection_matrix);
     end
 
 end
