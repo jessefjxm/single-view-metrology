@@ -47,24 +47,17 @@ end
 
 % --- Executes on button press in loadImage.
 function loadImage_Callback(hObject, eventdata, handles)
-<<<<<<< HEAD
-global filename;
-=======
-
-
->>>>>>> a680bb46d9606f8001a83437643891d41d887e0a
 % get file
-filepath = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
+handles.filepath = uigetfile({'*.jpg;*.tif;*.png;*.gif','All Image Files';...
     '*.*','All Files' },'Select File to perform Single View Metrology on...');
-[~,filename,~] = fileparts(filepath);
 % update image
 axes(handles.image)
-handles.im = image(imread(filepath));
+handles.im = image(imread(handles.filepath));
 axis image;
 hold all;
-%handles.im.ButtonDownFcn = @image_ButtonDownFcn;
 set(handles.im,'buttondownfcn',{@image_ButtonDownFcn,handles});
 guidata(hObject, handles);
+set(handles.showModel,'Enable','on') ;
 % init variables
 global vpoints;
 global plots;
@@ -89,13 +82,14 @@ global plots;
 global lines;
 global reflength;
 global vanishing_points;
-% draw point
-if(size(vpoints,1) <= 8+4+2)
-    % pick points
-    x1 = eventdata.IntersectionPoint(1);
-    y1 = eventdata.IntersectionPoint(2);
-    vpoints = [vpoints;x1,y1,1];
+if(size(vpoints,1) > 8+1+3)
+    return
 end
+% pick points
+x1 = eventdata.IntersectionPoint(1);
+y1 = eventdata.IntersectionPoint(2);
+vpoints = [vpoints;x1,y1,1];
+
 % state machine
 if(size(vpoints,1) <= 8)
     % ######################################################
@@ -119,22 +113,14 @@ if(size(vpoints,1) <= 8)
     end
 elseif (size(vpoints,1) <= 8+1)
     % #################################################
-<<<<<<< HEAD
     % Select oringin point
-=======
-    % Select Origin planes
->>>>>>> a680bb46d9606f8001a83437643891d41d887e0a
     % #################################################
     plots = [plots;plot(x1,y1,'.','color','red','LineWidth',2)];
     textUpdate(4);
 elseif (size(vpoints,1) <= 8+1+3)
-<<<<<<< HEAD
     % #################################################
     % Set reference point and length
     % #################################################
-=======
-    
->>>>>>> a680bb46d9606f8001a83437643891d41d887e0a
     plots = [plots;plot(x1,y1,'*','color','yellow')];
     textUpdate(4);
     % draw line
@@ -144,38 +130,29 @@ elseif (size(vpoints,1) <= 8+1+3)
     len = inputdlg('Enter length of this reference line - example 50',...
         'Set Reference Length',1,{'50'});
     reflength = [reflength str2num(len{:})];
-<<<<<<< HEAD
-    if(size(vpoints,1) == 8+1+3)
+    if(size(vpoints,1) == 8 + 1 + 3)
         % #################################################
         % Calculation projection & Homography matrix
         % #################################################
         set(handles.xyplane,'Enable','on') ;
         set(handles.xzplane,'Enable','on') ;
         set(handles.yzplane,'Enable','on') ;
-    end
-=======
-    
-    % Calculate Projection Matrix
-    if(size(vpoints,1) == 8 + 1 + 3)
-        
         % Pull out origin from vpoints structure
         origin = [];
         origin = [origin; [vpoints(9,1) vpoints(9,2) 1]];
-
         % Pull out reference points from vpoints structure
         ref_points = [];
         for i=10:12
             % Build x y z matrix
             ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
-
-        end  
-
+        end
         % Create Projection Matrix
-        projection_matrix = getProjectionMatrix(origin,ref_points,reflength,vanishing_points); 
-        [HomX,HomY,HomZ] = getHomographyMatrices(projection_matrix);
+        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,vanishing_points);
+        [handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
+        guidata(hObject, handles);
+        % update hint
+        textUpdate(5);
     end
-
->>>>>>> a680bb46d9606f8001a83437643891d41d887e0a
 end
 end
 
@@ -191,7 +168,7 @@ switch status
     case 1
         set(gh.status, 'String', sprintf('%s%d%s','1. Pick Vanish Points [',size(vpoints,1),'/8]'));
         set(gh.status, 'ForegroundColor', [0 0.5 0.75]);
-        set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s',...
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
             'Click on the image to set a vanishing points.',...
             'Two points will form one vanishing line.',...
             'Please click 8 points to form 4 parrallel lines as cuboid edges.'));
@@ -203,21 +180,29 @@ switch status
     case 3
         set(gh.status, 'String', sprintf('%s%d%s','2. Pick Oringin Point [',size(vpoints,1)-8,'/1]'));
         set(gh.status, 'ForegroundColor', [0 0.25 0.5]);
-        set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s\n\n%s',...
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s\n%s',...
             'Now we need to select 1 oringin point at real coordinate.',...
             'Click on the image to set one point.',...
             'Note : we suggest pick one corner point as the oringin of axis.'));
     case 4
         set(gh.status, 'String', sprintf('%s%d%s','3. Set Reference Points [',size(vpoints,1)-8-1,'/3]'));
         set(gh.status, 'ForegroundColor', [0.5 0.25 0.5]);
-        set(gh.hint, 'String', sprintf('%s\n\n%s\n\n%s',...
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
             'Now we need to set reference points to get real length info of the scenario.',...
             'Select 3 reference points for each axis (x,y,z), then input the length of each line.',...
             'Axis order: X->Y->Z.'));
+    case 5
+        set(gh.status, 'String', sprintf('%s','4. Cut Texture'));
+        set(gh.status, 'ForegroundColor', [0.5 0.5 0.5]);
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s\n\n%s\n%s',...
+            'Now you need to select the texture area and cut it out.',...
+            'Click 3 Plane buttons shown above [X-Y, X-Z, Y-Z] to work on one of the transformed plane.',...
+            'In each plane, you need to first select the texture region by moving the cursor, then do [Right Click -> Crop Image]'),...
+            'After all textures were cut, you can click Show Model button to take a view.');
     otherwise
         set(gh.status, 'String', 'Waiting for an Image');
         set(gh.status, 'ForegroundColor', [1 0 0]);
-        set(gh.hint, 'String', sprintf('%s\n\n%s',...
+        set(gh.hint, 'String', sprintf('%s\n%s',...
             'Every things start with loading a image.',...
             'Please press the ''Load Image'' button.'));
 end
@@ -225,16 +210,26 @@ end
 
 % --- Executes on button press in xyplane.
 function xyplane_Callback(hObject, eventdata, handles)
+I = getTextureMaps(handles.HomXY, handles.filepath);
 end
 
 % --- Executes on button press in xzplane.
 function xzplane_Callback(hObject, eventdata, handles)
+I = getTextureMaps(handles.HomXZ, handles.filepath);
 end
 
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
+I = getTextureMaps(handles.HomYZ, handles.filepath);
 end
 
 % --- Executes on button press in showModel.
 function showModel_Callback(hObject, eventdata, handles)
+[path,name,~] = fileparts(handles.filepath);
+fullFileName = strcat(path,'\',name,'.wrl');
+if ~exist(fullFileName, 'file')
+    msgbox({'Model haven''t been created!'}, 'Error','warn');
+else
+    uiopen(fullFileName,1);
+end
 end
