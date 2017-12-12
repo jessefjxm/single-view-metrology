@@ -1,4 +1,4 @@
-function P = getProjectionMatrix(origin,ref_points,ref_lengths,vanishing_points,VPx,VPy,VPz)
+function P = getProjectionMatrix(origin,ref_points,ref_lengths,VPx,VPy,VPz)
 fprintf('Calculating Projection Matrix based on the following...\n');
     
 
@@ -12,7 +12,7 @@ fprintf('Reference Lengths\n');
 disp(ref_lengths);
 
 fprintf('Vanishing Points\n');
-disp(vanishing_points);
+%disp(vanishing_points);
 
 % #########################################################
 % Scaling Factor Step - Is this actually necessary though?

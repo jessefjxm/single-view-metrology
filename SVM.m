@@ -63,6 +63,9 @@ global vpoints;
 global plots;
 global lines;
 global reflength;
+
+
+
 delete(plots(:));
 delete(lines(:));
 vpoints = [];
@@ -77,12 +80,15 @@ end
 
 % --- Executes on button press in showModel.
 function image_ButtonDownFcn(hObject, eventdata, handles)
+global VPx;
+global VPy;
+global VPz;
 global vpoints;
 global plots;
 global lines;
 global reflength;
 global vanishing_points;
-if(size(vpoints,1) > 8+1+3)
+if(size(vpoints,1) > 12+1+3)
     return
 end
 % pick points
@@ -91,7 +97,7 @@ y1 = eventdata.IntersectionPoint(2);
 vpoints = [vpoints;x1,y1,1];
 
 % state machine
-if(size(vpoints,1) <= 8)
+if(size(vpoints,1) <= 12)
     % ######################################################
     % Get Vanishing Points - Must Select Vanishing Points
     % ######################################################
@@ -102,47 +108,32 @@ if(size(vpoints,1) <= 8)
     if(mod(vsize,2)==0)
         lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'--','LineWidth',1.5,'color','b')] ;
     end
-    if (size(vpoints,1) == 8)
+    if (size(vpoints,1) == 12)
         textUpdate(2);
         % Calculate Vanishing Points
         delete(plots(:));
         
         disp(vpoints);
-        disp(size(vpoints));
         
-        % vanishing_points = getVanishingPoints(vpoints);
+        %vanishing_points = getVanishingPoints(vpoints)
+        [VPx,VPy,VPz] = getVP(vpoints);
         
-        x = vpoints(:,1,:);
-        y = vpoints(:,2,:);
-
-        [x1,y1] = getVP(x(1:2),y(1:2));
-        VPx = [x1;y1;1];
-        
-        [x2,y2] = getVP(x(3:4),y(3:4));
-        VPy = [x2;y2;1];
-        
-        [x3,y3] = getVP(x(5:6),y(5:6));
-        VPz = [x3;y3;1];s
-        
-        disp('Vpx');
+        fprintf('Vanishing Points\n');
         disp(VPx);
-        
-        disp('Vpy');
         disp(VPy);
-        
-        disp('Vpz');
         disp(VPz);
+      
         
         pause(1);
         textUpdate(3);
     end
-elseif (size(vpoints,1) <= 8+1)
+elseif (size(vpoints,1) <= 12+1)
     % #################################################
     % Select oringin point
     % #################################################
     plots = [plots;plot(x1,y1,'.','color','red','LineWidth',2)];
     textUpdate(4);
-elseif (size(vpoints,1) <= 8+1+3)
+elseif (size(vpoints,1) <= 12+1+3)
     % #################################################
     % Set reference point and length
     % #################################################
@@ -150,12 +141,12 @@ elseif (size(vpoints,1) <= 8+1+3)
     textUpdate(4);
     % draw line
     vsize = size(vpoints,1);
-    lines = [lines;plot([vpoints(9,1) vpoints(vsize,1)],[vpoints(9,2) vpoints(vsize,2)],'LineWidth',2,'color','yellow')] ;
+    lines = [lines;plot([vpoints(13,1) vpoints(vsize,1)],[vpoints(13,2) vpoints(vsize,2)],'LineWidth',2,'color','yellow')] ;
     % get length
     len = inputdlg('Enter length of this reference line - example 50',...
         'Set Reference Length',1,{'50'});
     reflength = [reflength str2num(len{:})];
-    if(size(vpoints,1) == 8 + 1 + 3)
+    if(size(vpoints,1) == 12 + 1 + 3)
         % #################################################
         % Calculation projection & Homography matrix
         % #################################################
@@ -164,7 +155,7 @@ elseif (size(vpoints,1) <= 8+1+3)
         set(handles.yzplane,'Enable','on') ;
         % Pull out origin from vpoints structure
         origin = [];
-        origin = [origin; [vpoints(9,1) vpoints(9,2) 1]];
+        origin = [origin; [vpoints(13,1) vpoints(13,2) 1]];
         % Pull out reference points from vpoints structure
         ref_points = [];
         for i=10:12
@@ -172,7 +163,7 @@ elseif (size(vpoints,1) <= 8+1+3)
             ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
         end
         % Create Projection Matrix
-        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,Vpy,Vpz);
+        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,VPy,VPz);
         [handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
         guidata(hObject, handles);
         % update hint
@@ -228,7 +219,7 @@ switch status
         set(gh.status, 'String', 'Waiting for an Image');
         set(gh.status, 'ForegroundColor', [1 0 0]);
         set(gh.hint, 'String', sprintf('%s\n%s',...
-            'Every things start with loading a image.',...
+            'Every things start with loading a imagediso.',...
             'Please press the ''Load Image'' button.'));
 end
 end
