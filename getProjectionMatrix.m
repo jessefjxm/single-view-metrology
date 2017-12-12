@@ -1,4 +1,4 @@
-function P = getProjectionMatrix(origin,ref_points,ref_lengths,vanishing_points)
+function P = getProjectionMatrix(origin,ref_points,ref_lengths,vanishing_points,VPx,VPy,VPz)
 fprintf('Calculating Projection Matrix based on the following...\n');
     
 
@@ -19,9 +19,9 @@ disp(vanishing_points);
 % #########################################################
 
 % Setup vanishing point matrix into x, y, z, vectors
-Vx = vanishing_points(:,1); 
-Vy = vanishing_points(:,2);
-Vz = vanishing_points(:,3);
+%Vx = vanishing_points(:,1); 
+%Vy = vanishing_points(:,2);
+%Vz = vanishing_points(:,3);
 
 % Setup reference point Matrix into x, y, z, vectors
 Rx = ref_points(:,1);
@@ -36,12 +36,12 @@ RLenx = ref_lengths(1);
 RLeny = ref_lengths(2);
 RLenz = ref_lengths(3);
 
-Ax = ((Vx - Rx) \ (Rx - Ov )) / RLenx;
-Ay = ((Vy - Ry) \ (Ry - Ov )) / RLeny;
-Az = ((Vz - Rz) \ (Rz - Ov )) / RLenz;
+Ax = ((VPx - Rx) \ (Rx - Ov )) / RLenx;
+Ay = ((VPy - Ry) \ (Ry - Ov )) / RLeny;
+Az = ((VPz - Rz) \ (Rz - Ov )) / RLenz;
 
 % Create Projection Matrix
-P = [Vx*Ax, Vy*Ay, Vz*Az, Ov];
+P = [VPx*Ax, VPy*Ay, VPz*Az, Ov];
 P = [P(:,1) -P(:,2) -P(:,3) P(:,4)]; 
 
 fprintf('Projection Matrix\n');

@@ -106,8 +106,33 @@ if(size(vpoints,1) <= 8)
         textUpdate(2);
         % Calculate Vanishing Points
         delete(plots(:));
-        vanishing_points = getVanishingPoints(vpoints);
-        disp(vanishing_points);
+        
+        disp(vpoints);
+        disp(size(vpoints));
+        
+        % vanishing_points = getVanishingPoints(vpoints);
+        
+        x = vpoints(:,1,:);
+        y = vpoints(:,2,:);
+
+        [x1,y1] = getVP(x(1:2),y(1:2));
+        VPx = [x1;y1;1];
+        
+        [x2,y2] = getVP(x(3:4),y(3:4));
+        VPy = [x2;y2;1];
+        
+        [x3,y3] = getVP(x(5:6),y(5:6));
+        VPz = [x3;y3;1];s
+        
+        disp('Vpx');
+        disp(VPx);
+        
+        disp('Vpy');
+        disp(VPy);
+        
+        disp('Vpz');
+        disp(VPz);
+        
         pause(1);
         textUpdate(3);
     end
@@ -147,7 +172,7 @@ elseif (size(vpoints,1) <= 8+1+3)
             ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
         end
         % Create Projection Matrix
-        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,vanishing_points);
+        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,Vpy,Vpz);
         [handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
         guidata(hObject, handles);
         % update hint
