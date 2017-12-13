@@ -258,17 +258,17 @@ end
 
 % --- Executes on button press in xyplane.
 function xyplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomXY, handles.filepath);
+I = getTextureMaps(handles.HomXY, handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in xzplane.
 function xzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomXZ, handles.filepath);
+I = getTextureMaps(handles.HomXZ, handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomYZ, handles.filepath);
+I = getTextureMaps(handles.HomYZ, handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in showModel.
