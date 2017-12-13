@@ -113,14 +113,15 @@ if(size(vpoints,1) <= 12)
         % Calculate Vanishing Points
         delete(plots(:));
         
-        disp(vpoints);
-        
-        %vanishing_points = getVanishingPoints(vpoints)
         [VPx,VPy,VPz] = getVP(vpoints);
         
-        fprintf('Vanishing Points\n');
+        fprintf('Vanishing Point VPx\n');
         disp(VPx);
+        
+        fprintf('Vanishing Point VPy\n');
         disp(VPy);
+        
+        fprintf('Vanishing Point VPz\n');
         disp(VPz);
       
         
