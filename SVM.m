@@ -63,9 +63,6 @@ global vpoints;
 global plots;
 global lines;
 global reflength;
-
-
-
 delete(plots(:));
 delete(lines(:));
 vpoints = [];
@@ -97,12 +94,37 @@ y1 = eventdata.IntersectionPoint(2);
 vpoints = [vpoints;x1,y1,1];
 
 % state machine
-if(size(vpoints,1) <= 12)
+if(size(vpoints,1) <= 4)
     % ######################################################
     % Get Vanishing Points - Must Select Vanishing Points
     % ######################################################
-    plots = [plots;plot(x1,y1,'*','color','b')];
+    % X axis
+    plots = [plots;plot(x1,y1,'*','color','r')];
     textUpdate(1);
+    % draw lines
+    vsize = size(vpoints,1);
+    if(mod(vsize,2)==0)
+        lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'--','LineWidth',1.5,'color','r')] ;
+    end 
+    if (size(vpoints,1) == 4)
+        textUpdate(102);
+    end
+elseif(size(vpoints,1) <= 8)
+    % Y axis
+    plots = [plots;plot(x1,y1,'*','color','g')];
+    textUpdate(102);
+    % draw lines
+    vsize = size(vpoints,1);
+    if(mod(vsize,2)==0)
+        lines = [lines;plot(vpoints(vsize-1:vsize,1),vpoints(vsize-1:vsize,2),'--','LineWidth',1.5,'color','g')] ;
+    end
+    if (size(vpoints,1) == 8)
+        textUpdate(103);
+    end
+elseif(size(vpoints,1) <= 12)
+    % Z axis
+    plots = [plots;plot(x1,y1,'*','color','b')];
+    textUpdate(103);
     % draw lines
     vsize = size(vpoints,1);
     if(mod(vsize,2)==0)
@@ -110,21 +132,16 @@ if(size(vpoints,1) <= 12)
     end
     if (size(vpoints,1) == 12)
         textUpdate(2);
-        % Calculate Vanishing Points
         delete(plots(:));
-        
-        [VPx,VPy,VPz] = getVP(vpoints);
-        
+        % Calculate Vanishing Points
+        [VPx,VPy,VPz] = getVP(vpoints);        
         fprintf('Vanishing Point VPx\n');
         disp(VPx);
-        
         fprintf('Vanishing Point VPy\n');
         disp(VPy);
-        
         fprintf('Vanishing Point VPz\n');
         disp(VPz);
       
-        
         pause(1);
         textUpdate(3);
     end
@@ -183,26 +200,40 @@ switch status
         set(gh.status, 'ForegroundColor', [0 0.5 0]);
         set(gh.hint, 'String', sprintf('%s', 'Image loaded.'));
     case 1
-        set(gh.status, 'String', sprintf('%s%d%s','1. Pick Vanish Points [',size(vpoints,1),'/8]'));
+        set(gh.status, 'String', sprintf('%s%d%s','1. Set Vanish Line [X axis] [',size(vpoints,1),'/4]'));
         set(gh.status, 'ForegroundColor', [0 0.5 0.75]);
         set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
-            'Click on the image to set a vanishing points.',...
+            'Click on the image to set a point.',...
             'Two points will form one vanishing line.',...
-            'Please click 8 points to form 4 parrallel lines as cuboid edges.'));
+            'Please click 4 points to form 2 parrallel lines that corresponding to [X axis].'));
+    case 102
+        set(gh.status, 'String', sprintf('%s%d%s','1. Set Vanish Line [Y axis] [',size(vpoints,1)-4,'/4]'));
+        set(gh.status, 'ForegroundColor', [0 0.5 0.75]);
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
+            'Click on the image to set a point.',...
+            'Two points will form one vanishing line.',...
+            'Please click 4 points to form 2 parrallel lines that corresponding to [Y axis].'));
+    case 103
+        set(gh.status, 'String', sprintf('%s%d%s','1. Set Vanish Line [Z axis] [',size(vpoints,1)-8,'/4]'));
+        set(gh.status, 'ForegroundColor', [0 0.5 0.75]);
+        set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
+            'Click on the image to set a point.',...
+            'Two points will form one vanishing line.',...
+            'Please click 4 points to form 2 parrallel lines that corresponding to [Z axis].'));
     case 2
         set(gh.status, 'String', sprintf('%s','Calculating Vanishing Points'));
         set(gh.status, 'ForegroundColor', [0 0.5 0.5]);
         set(gh.hint, 'String', sprintf('%s',...
             'Calculating...Please wait.'));
     case 3
-        set(gh.status, 'String', sprintf('%s%d%s','2. Pick Oringin Point [',size(vpoints,1)-8,'/1]'));
+        set(gh.status, 'String', sprintf('%s%d%s','2. Pick Oringin Point [',size(vpoints,1)-12,'/1]'));
         set(gh.status, 'ForegroundColor', [0 0.25 0.5]);
         set(gh.hint, 'String', sprintf('%s\n%s\n%s\n%s',...
             'Now we need to select 1 oringin point at real coordinate.',...
             'Click on the image to set one point.',...
             'Note : we suggest pick one corner point as the oringin of axis.'));
     case 4
-        set(gh.status, 'String', sprintf('%s%d%s','3. Set Reference Points [',size(vpoints,1)-8-1,'/3]'));
+        set(gh.status, 'String', sprintf('%s%d%s','3. Set Reference Points [',size(vpoints,1)-12-1,'/3]'));
         set(gh.status, 'ForegroundColor', [0.5 0.25 0.5]);
         set(gh.hint, 'String', sprintf('%s\n%s\n%s',...
             'Now we need to set reference points to get real length info of the scenario.',...
