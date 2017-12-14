@@ -7,7 +7,7 @@ figure('Name','Cut Texture');
 [I,rect] = imcrop(imwarp(im, tform));
 close(gcf);
 % get 3D real coordinate
-coord = zeroes(4,3);
+coord = zeros(4,3);
 coord(1) = [rect(1) rect(2) 1];
 coord(2) = [rect(1)+rect(3) rect(2) 1];
 coord(3) = [rect(1)+rect(3) rect(2)+rect(4) 1];

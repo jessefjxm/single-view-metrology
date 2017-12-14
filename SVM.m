@@ -179,10 +179,23 @@ elseif (size(vpoints,1) <= 12+1+3)
         for i=10:12
             % Build x y z matrix
             ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
+            disp(ref_points);
         end
         % Create Projection Matrix
-        handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,VPy,VPz);
-        [handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
+        %handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,VPy,VPz);
+        %[handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
+        refX = ref_points(1,:);
+        refX = refX(:);
+        refY = ref_points(2,:);
+        refY = refY(:);
+        refZ = ref_points(3,:);
+        refZ = refZ(:);
+        refXlen = reflength(1);
+        refYlen = reflength(2);
+        refZlen = reflength(3);
+        origin = origin(:);
+        
+        [handles.HomXY,handles.HomXZ,handles.HomYZ,handles.projection_matrix] = getHomographyMatrices(refX,refY,refZ,refXlen,refYlen,refZlen,VPx,VPy,VPz,origin);
         guidata(hObject, handles);
         % update hint
         textUpdate(5);
