@@ -18,7 +18,7 @@ fprintf("Reference Point Y\n");
 disp(refY);
 
 fprintf("Reference Point Z\n");
-disp(refY);
+disp(refZ);
 
 % scaling factor
 a_x = ((vX - refX) \ (refX - O))/refXlen;

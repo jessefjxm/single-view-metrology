@@ -182,8 +182,6 @@ elseif (size(vpoints,1) <= 12+1+3)
             disp(ref_points);
         end
         % Create Projection Matrix
-        %handles.projection_matrix = getProjectionMatrix(origin,ref_points,reflength,VPx,VPy,VPz);
-        %[handles.HomXY,handles.HomXZ,handles.HomYZ] = getHomographyMatrices(handles.projection_matrix);
         refX = ref_points(1,:);
         refX = refX(:);
         refY = ref_points(2,:);
@@ -271,17 +269,17 @@ end
 
 % --- Executes on button press in xyplane.
 function xyplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomXY, handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomXY), handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in xzplane.
 function xzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomXZ, handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomXZ), handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(handles.HomYZ, handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomYZ), handles.filepath, handles.projection_matrix);
 end
 
 % --- Executes on button press in showModel.
