@@ -1,14 +1,13 @@
 function saveVRMLModel(texture, coord, filepath)
 dimension = 3;
 % input texture name
-textureName = input({'Give this texture a name:'...
-    '[Note] No need to input the file format suffix'}, 's');
-texturePath = strcat(textureName,'.jpg');
+textureName = inputdlg('Give this texture a name [without need suffix]:','Set Texture Name');
+texturePath = sprintf('%s.png',textureName{1});
 imwrite(texture, texturePath);
 
 % create vrml file if not exist
-[path,name,~] = fileparts(handles.filepath);
-fullFileName = strcat(path,'\',name,'.wrl');
+[~,name,~] = fileparts(filepath);
+fullFileName = strcat(name,'.wrl');
 if ~exist(fullFileName, 'file')
     fid = fopen(fullFileName,'w');
     fprintf(fid,strcat('#VRML V2.0 utf8\nWorldInfo \{  title \"','Single-view Metrology of','\" \}'));
@@ -42,4 +41,6 @@ fprintf(fid, '%i,', -1);
 % tail
 fprintf(fid, '\n   ]\n   solid FALSE\n  }\n}');
 fclose(fid);
+
+msgbox('Texture saved!','Success');
 end
