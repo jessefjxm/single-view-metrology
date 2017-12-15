@@ -161,8 +161,8 @@ elseif (size(vpoints,1) <= 12+1+3)
     vsize = size(vpoints,1);
     lines = [lines;plot([vpoints(13,1) vpoints(vsize,1)],[vpoints(13,2) vpoints(vsize,2)],'LineWidth',2,'color','yellow')] ;
     % get length
-    len = inputdlg('Enter length of this reference line - example 50',...
-        'Set Reference Length',1,{'50'});
+    len = inputdlg('Enter length of this reference line - example 500 [pixel]',...
+        'Set Reference Length',1,{'500'});
     reflength = [reflength str2num(len{:})];
     if(size(vpoints,1) == 12 + 1 + 3)
         % #################################################
@@ -176,7 +176,7 @@ elseif (size(vpoints,1) <= 12+1+3)
         origin = [origin; [vpoints(13,1) vpoints(13,2) 1]];
         % Pull out reference points from vpoints structure
         ref_points = [];
-        for i=10:12
+        for i=14:16
             % Build x y z matrix
             ref_points = [ref_points; [vpoints(i,1) vpoints(i,2) 1]];
             disp(ref_points);
@@ -193,7 +193,8 @@ elseif (size(vpoints,1) <= 12+1+3)
         refZlen = reflength(3);
         origin = origin(:);
         
-        [handles.HomXY,handles.HomXZ,handles.HomYZ,handles.projection_matrix] = getHomographyMatrices(refX,refY,refZ,refXlen,refYlen,refZlen,VPx,VPy,VPz,origin);
+        [handles.HomXY,handles.HomXZ,handles.HomYZ,handles.projection_matrix] = ...
+            getHomographyMatrices(refX,refY,refZ,refXlen,refYlen,refZlen,VPx,VPy,VPz,origin);
         guidata(hObject, handles);
         % update hint
         textUpdate(5);

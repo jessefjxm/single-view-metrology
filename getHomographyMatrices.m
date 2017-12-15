@@ -36,15 +36,15 @@ disp(a_y);
 
 % Projection Matrix P
 P = [vX * a_x, vY * a_y, vZ * a_z, O];
-P = [P(:,1) -P(:,2) -P(:,3) P(:,4)];
+P = [P(:,1) -P(:,2) P(:,3) P(:,4)];
 
 fprintf('Projection Matrix\n');
 disp(P)
 
 % Homography Matrix H
-Hxy = [P(:,1:2),P(:,4)];
-Hxz = [P(:,1),P(:,3:4)];
-Hyz = P(:,2:4);
+Hxy = [P(:,1),P(:,2),P(:,4)];
+Hxz = [P(:,1),P(:,3),P(:,4)];
+Hyz = [P(:,2),P(:,3),P(:,4)];
 fprintf('Homography XY\n')
 disp(Hxy)
 fprintf('Homography XZ\n')
