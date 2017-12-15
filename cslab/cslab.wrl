@@ -1,0 +1,166 @@
+#VRML V2.0 utf8
+WorldInfo {  title "Single-view Metrology of" }
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "xy.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [
+        2	0	0,
+        2	674	0,
+        478	674	0,
+        478	0	0,
+      ] }
+    coordIndex [0,1,2,3]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00,
+    ]
+   }
+   texCoordIndex [
+    0,1,2,3
+   ]
+   solid FALSE
+  }
+}
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "xz.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [
+        478	674	250,
+        478	674	0,
+        478	0	0,
+        478	0	250,
+      ] }
+    coordIndex [1,0,3,2]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00,
+    ]
+   }
+   texCoordIndex [
+    0,1,2,3
+   ]
+   solid FALSE
+  }
+}
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "yz.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [
+        2	674	246,
+        2	674	0,
+        478	674	0,
+        478	674	250,
+      ] }
+    coordIndex [2,3,0,1]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00,
+    ]
+   }
+   texCoordIndex [
+    0,1,2,3
+   ]
+   solid FALSE
+  }
+}
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "xy2.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [ 0 50 100,
+        0 0 100,
+        120 0 100,
+        120 50 100
+		
+      ] }
+    coordIndex [0,1,2,3,-1]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00,
+    ]
+   }
+   texCoordIndex [
+    1,2,3,0
+   ]
+   solid FALSE
+  }
+}
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "xz2.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [
+        0.407137464399273	49.7862607924941	100,
+        0.407137464399273	49.7862607924941	0,
+        1.05283146164404	2.80015158628922	0,
+        1.05283146164404	2.80015158628922	100,
+
+      ] }
+    coordIndex [0,1,2,3,-1]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00,
+    ]
+   }
+   texCoordIndex [
+    1,2,3,0
+   ]
+   solid FALSE
+  }
+}
+Shape{
+  appearance Appearance {
+    texture ImageTexture { url "yz2.jpg"}
+  }
+  geometry IndexedFaceSet {
+    coord Coordinate {
+      point [
+        1.05283146164404	2.80015158628922	100,
+         1.05283146164404	2.80015158628922	0,
+         119.781915769128	0.123749650175167	0,
+        119.781915769128	0.123749650175167	100
+		
+      ] }
+    coordIndex [2,3,0,1,-1]
+   texCoord TextureCoordinate {
+    point [
+     0.00 0.00,
+     0.00 1.00,
+     1.00 1.00,
+     1.00 0.00
+    ]
+   }
+   texCoordIndex [
+    1,2,3,0
+   ]
+   solid FALSE
+  }
+}

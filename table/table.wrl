@@ -22,14 +22,13 @@ WorldInfo {  title "Single-view Metrology of" }
    texCoord TextureCoordinate {
     point [
      0.00 0.00,
-     1.00 0.00,
-     1.00 1.00,
      0.00 1.00,
-
+     1.00 1.00,
+     1.00 0.00,
     ]
    }
    texCoordIndex [
-    0,1,2,3,
+    1,2,3,0
    ]
    solid FALSE
   }
@@ -59,7 +58,6 @@ WorldInfo {  title "Single-view Metrology of" }
      0.00 1.00,
      1.00 1.00,
      1.00 0.00,
-
     ]
    }
    texCoordIndex [
