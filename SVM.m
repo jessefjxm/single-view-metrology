@@ -172,8 +172,8 @@ elseif (size(vpoints,1) <= 12+1+3)
         set(handles.xzplane,'Enable','on') ;
         set(handles.yzplane,'Enable','on') ;
         % Pull out origin from vpoints structure
-        origin = [];
-        origin = [origin; [vpoints(13,1) vpoints(13,2) 1]];
+        handles.origin = [];
+        handles.origin = [handles.origin; [vpoints(13,1) vpoints(13,2) 1]];
         % Pull out reference points from vpoints structure
         ref_points = [];
         for i=14:16
@@ -191,10 +191,10 @@ elseif (size(vpoints,1) <= 12+1+3)
         refXlen = reflength(1);
         refYlen = reflength(2);
         refZlen = reflength(3);
-        origin = origin(:);
+        handles.origin = handles.origin(:);
         
         [handles.HomXY,handles.HomXZ,handles.HomYZ,handles.projection_matrix] = ...
-            getHomographyMatrices(refX,refY,refZ,refXlen,refYlen,refZlen,VPx,VPy,VPz,origin);
+            getHomographyMatrices(refX,refY,refZ,refXlen,refYlen,refZlen,VPx,VPy,VPz,handles.origin);
         guidata(hObject, handles);
         % update hint
         textUpdate(5);
@@ -270,17 +270,20 @@ end
 
 % --- Executes on button press in xyplane.
 function xyplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(inv(handles.HomXY), handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomXY), handles.filepath, ...
+    handles.projection_matrix, handles.origin, 'XY');
 end
 
 % --- Executes on button press in xzplane.
 function xzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(inv(handles.HomXZ), handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomXZ), handles.filepath,  ...
+    handles.projection_matrix, handles.origin, 'XZ');
 end
 
 % --- Executes on button press in yzplane.
 function yzplane_Callback(hObject, eventdata, handles)
-I = getTextureMaps(inv(handles.HomYZ), handles.filepath, handles.projection_matrix);
+I = getTextureMaps(inv(handles.HomYZ), handles.filepath,  ...
+    handles.projection_matrix, handles.origin, 'YZ');
 end
 
 % --- Executes on button press in showModel.
