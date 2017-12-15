@@ -4,7 +4,13 @@ im = imread(filepath);
 % hint and crop
 tform = projective2d(invH');
 figure('Name','Cut Texture');
-[I,rect] = imcrop(imwarp(im, tform));
+im1 = imwarp(im, tform);
+% up side down
+for k=1:3
+    im2(:,:,k)=flipud(im1(:,:,k));
+    im3(:,:,k)=fliplr(im2(:,:,k));
+end
+[I,rect] = imcrop(im3);
 close(gcf);
 rect
 % get 3D real coordinate
